@@ -35,13 +35,7 @@ jobs:
         run: tar -czf museum.tar.gz ./server
 
       - name: Upload Release Asset
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/gzip" \
-            -T "museum.tar.gz" \
-            "https://uploads.github.com/repos/${{ github.repository }}/releases/1.0.0/assets?name=museum.tar.gz"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: museum.tar.gz
+          tag_name: 1.0.0
