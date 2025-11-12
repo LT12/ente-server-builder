@@ -10,6 +10,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
     steps:
       - uses: actions/checkout@v5
         with:
@@ -18,6 +20,8 @@ jobs:
         with:
           go-version-file: './server/go.mod'
       - name: install dependencies
+        run: apk update && apk add libsodium libsodium-dev pkgconfig
+      - name: install go dependencies
         run: go mod tidy
         working-directory: ./server
         
