@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          repository: 'https://github.com/ente-io/ente'
+          repository: 'ente-io/ente'
       - uses: actions/setup-go@v6
         with:
           go-version-file: './server/go.mod'
