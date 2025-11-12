@@ -28,6 +28,8 @@ jobs:
       - name: build museum
         run: go build -o museum cmd/museum/main.go
         working-directory: ./server
+        env:
+          CGO_ENABLED: 1
 
       - name: tar server folder
         run: tar -czf museum.tar.gz ./server
