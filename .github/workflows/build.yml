@@ -1,0 +1,41 @@
+name: Build and archive museum server
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: 'https://github.com/ente-io/ente'
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: './server/go.mod'
+      - name: install dependencies
+        run: go mod tidy
+        working-directory: ./server
+        
+      - name: build museum
+        run: go build -o museum cmd/museum/main.go
+        working-directory: ./server
+
+      - name: tar server folder
+        run: tar -czf museum.tar.gz ./server
+
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/gzip" \
+            -T "museum.tar.gz" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/1.0.0/assets?name=museum.tar.gz"
